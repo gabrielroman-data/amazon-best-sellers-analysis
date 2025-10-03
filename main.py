@@ -1,4 +1,5 @@
 import pandas as pd # Importo la librería pandas para el manejo y análisis de datos.
+import matplotlib.pyplot as plt # Importamos matplotlib
 
 # Cargo mi dataset original de bestsellers.
 df = pd.read_csv('bestsellers.csv')
@@ -62,4 +63,54 @@ author_counts.head(5).to_csv("top_authors.csv")
 avg_rating_by_genre.to_csv("avg_rating_by_genre.csv")
 
 # Finalmente, exporto el dataset limpio y transformado a un nuevo archivo CSV.
+
 df.to_csv("bestsellers_cleaned.csv", index=False);
+# =========================================================================
+# 1. GRÁFICO: rendimiento de autores (top 10)
+# =========================================================================
+
+plt.figure(figsize=(10, 6)) # Define el tamaño de la figura
+# Seleccionamos el Top 10 de autores
+top_10_authors = author_counts.head(10)
+top_10_authors.sort_values(ascending=True).plot(kind='barh', color='skyblue')
+
+plt.title('Top 10 autores con más apariciones en bestsellers (2009-2019)', fontsize=14)
+plt.xlabel('Número de apariciones en bestsellers')
+plt.ylabel('Autor')
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.tight_layout() # Ajusta automáticamente los parámetros de la figura
+plt.show() # Muestra el gráfico
+
+# =========================================================================
+# 2. GRÁFICO: tendencia de precios (distribución)
+# =========================================================================
+
+plt.figure(figsize=(8, 5))
+# Utilizamos un histograma para ver cómo se distribuyen los precios.
+plt.hist(df['Price'], bins=15, color='darkorange', edgecolor='black', alpha=0.7)
+
+plt.title('Distribución de precios de libros bestsellers', fontsize=14)
+plt.xlabel('Precio (USD)')
+plt.ylabel('Frecuencia (número de libros)')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.axvline(df['Price'].mean(), color='red', linestyle='dashed', linewidth=1, label=f'Media: ${df["Price"].mean():.2f}')
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+# =========================================================================
+# 3. GRÁFICO: comparativa de género (Rating promedio)
+# =========================================================================
+
+plt.figure(figsize=(6, 4))
+# Utilizamos un gráfico de barras simple para comparar los dos géneros
+avg_rating_by_genre.plot(kind='bar', color=['lightcoral', 'lightgreen'])
+
+plt.title('Rating promedio por género', fontsize=14)
+plt.ylabel('Rating promedio (0.0 - 5.0)')
+plt.xlabel('Género')
+plt.ylim(4.4, 4.8) # Establece un límite para enfatizar la diferencia
+plt.xticks(rotation=0) # Mantiene las etiquetas del eje X horizontales
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
